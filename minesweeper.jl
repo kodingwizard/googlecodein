@@ -67,7 +67,7 @@ function first_pass()
   global unitedarr = Int32[]
   #ask user to choose a square
   println("Enter the number of the square you want to mine:")
-  
+  user_input() 
   check_mines(u_input)
   #find_mines()
   invalid_input()
