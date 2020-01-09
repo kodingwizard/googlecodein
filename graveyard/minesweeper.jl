@@ -5,13 +5,12 @@ function generate_grid()
   println("Choose the size of the grid: 8 (8x8) or 16 (16x16)\n")
   global n = parse(Int, readline())
   global total_squares = n*n
-  global grid = reshape(1:total_squares,(n,n))'
-  #global blank_grid = rand(" ", 8,8)
-  global pretty_grid = pretty_table(grid;noheader = true, hlines = 1:n)
+  global grid = reshape(" ",(n,n))'
+  pretty_table(grid;noheader = true, hlines = 1:n)
   if n == 8
-    global num_mines = 9 #number of mines inserted
+    num_mines = 9 #number of mines inserted
   elseif n == 16
-    global num_mines = 20
+    num_mines = 20
   end
   global mines = rand(1:total_squares, 1, num_mines)
 end
@@ -24,62 +23,46 @@ function user_input()
   return u_input
 end
 function first_pass()
-  #global opened_squares = Int[]
-  #global united = Int[]
+  global opened_squares = Int[]
   #ask user to choose a square
-  println(mines)
   println("Choose a number between 1 and ", total_squares, " :")
   #forces Julia to interpret user input as an integer so it can compare the input with the mines
   user_input()
+  check_mines(u_input)
   invalid_input()
+  flag_squares()
   discovered_squares()
-  find_mines()
-  check_mines(user_input())
-  #flag_squares()
-  #discovered_squares()
 end
 function flag_squares()
   if !(u_input in opened_squares)
     discovered_squares()
     println("Already opened squares: ")
     for i in 1:length(opened_squares)
-      #println(opened_squares[i])
-      println("Mined squares in flag_squares: ", united)
-      #println(length(united))
-      global grid = replace(grid, opened_squares[i] => length(united))
-      #replace(grid, u_input => length(united))
+      println(opened_squares[i])
+      replace(grid, opened_squares[i] => 0)
     end
-  global pretty_grid = pretty_table(grid;noheader = true, hlines = 1:n)
+  pretty_table(grid;noheader = true, hlines = 1:n)
   find_mines()
-  play()
   end
 end
 function find_mines()
-  global distance = [1, 7, 8, 9]
-  global pos_squares = Int[]
-  global neg_squares = Int[]
+  distance = [1, 7, 8, 9]
+  pos_squares = Int[]
+  neg_squares = Int[]
   for i in 1:length(distance)
     push!(pos_squares, u_input + distance[i])
   end
   for i in 1:length(distance)
     push!(neg_squares, u_input - distance[i])
   end
-  global adj_squares = vcat(pos_squares, neg_squares)
-  #println(adj_squares)
-  global united = findall(in(mines), adj_squares);
-  #println("Mined squares:", united)
-  #println(united)
-  #println("There are ", length(united), " mines in the adjacent squares")
-  return united
-  #global adj_mines = replace(pretty_grid, u_input => length(united))
-  #println(adj_mines)
- # play()
+  adj_squares = vcat(pos_squares, neg_squares)
+  united = findall(in(mines), adj_squares)
+  println("There are ", length(united), " mines in the adjacent squares")
+  play()
 end
 function end_game()
-  if u_input in mines
-    println("Boom! You died! This is where the mines were hidden: ", mines)
+  println("Boom! You died! This is where the mines were hidden: ", mines)
   exit()
-  end
 end
 #find_mines()
 function check_mines(u_input)
@@ -92,7 +75,7 @@ function check_mines(u_input)
 end
 function play()
 println("Here are your options. Would you like to continue playing(enter 1), or mark a square as a bomb(enter 2)?:")
-  global mark_squares = parse(Int, readline())
+  mark_squares = parse(Int, readline())
     if mark_squares == 1
       println("Ok. Choose another square.")
       user_input()
@@ -100,7 +83,7 @@ println("Here are your options. Would you like to continue playing(enter 1), or 
     elseif mark_squares == 2 
       #println(mines)
       println("Choose a square to pop:")
-      global pop_bomb = parse(Int, readline())
+      pop_bomb = parse(Int, readline())
       if pop_bomb in mines
         idx = findfirst(isequal(pop_bomb), mines)
         println(idx)
@@ -112,7 +95,6 @@ println("Here are your options. Would you like to continue playing(enter 1), or 
     end
 end
 function discovered_squares()
-  global opened_squares = Int[]
   if u_input < total_squares
     push!(opened_squares, u_input)
   end
@@ -132,15 +114,6 @@ function main()
   play()
 end
 main()
-
-
-
-
-
-
-
-
-
 #if the number given by the user is not one of the random numbers chosen by the computer, then the user is "safe" and the computer asks for another input... 
 #println("Would you like to mark a square as a bomb?(yes or no)?:")
 #mark_squares = readline()
