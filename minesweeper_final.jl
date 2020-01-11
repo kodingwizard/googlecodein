@@ -4,15 +4,12 @@
 #Program Name: Minesweeper 6.0
 
 println("Welcome to Minesweeper 6.0! To play this game, here are a few tips.\n\nThe first grid you will see is a list of numbers from either 1-64, or 1-256, depending on the size of the grid you choose. This is for your reference to which numbers are placed where. The second grid displays Xs, covered tiles, which will uncover the number of mines near your chosen square.\n\nSimply choose a number from 1-64 or 1-256, and the game will tell you if you are safe... or if you have landed on a mine. If you are safe, then the grid will display the number of mines near the square you chose by replacing the chosen number with the number of mines near that square. The number 0 means there are no mines near your square. 1 means that there is 1 mine adjacent to that square, and so on. Good luck surviving...you will need it!\n")
-<<<<<<< HEAD
 #importing the random library
 using Random
 #importing the drawings library, for making grids and tables
 using PrettyTables
-=======
 using Random #importing the random library
 using PrettyTables #importing the drawings library, for making grids and tables
->>>>>>> 5f4da6ac51ce8aff995b39ee645091a617223f76
 
 function generate_grid()
   print("Choose the size of the grid: 8 (8x8) or 16 (16x16): ")
@@ -57,7 +54,8 @@ function coords(c)
   return x, y
 end
 
-function checkuniq(mine)# this function makes sure that the random numbers generated are all different 
+# This function makes sure that the random numbers generated are all different 
+function checkuniq(mine)
   while !(allunique(mine))
     mine = rand(1:64, 1, 9)
     return mine
@@ -126,11 +124,7 @@ function end_game()
 #    pretty_table(arr, noheader = true, hlines = 1:n)
 #    game_over = replace(arr, mines => "RIP")
 #    print(game_over)
-<<<<<<< HEAD
 #  end
-=======
-  end
->>>>>>> 5f4da6ac51ce8aff995b39ee645091a617223f76
   exit()
 end
 
@@ -184,10 +178,7 @@ function main()
   play()
 end
 main()
-<<<<<<< HEAD
 
-=======
->>>>>>> 5f4da6ac51ce8aff995b39ee645091a617223f76
 #if the number given by the user is not one of the random numbers chosen by the computer, then the user is "safe" and the computer asks for another input... 
 #Note: global means that the variable has not been defined in the loop, but outside of the loop. 
 #Remember to import the package PrettyTables before you run this code in repl.it!
