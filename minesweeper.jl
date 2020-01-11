@@ -119,7 +119,7 @@ function end_game()
 #    pretty_table(arr, noheader = true, hlines = 1:n)
 #    game_over = replace(arr, mines => "RIP")
 #    print(game_over)
-  end
+#  end
   exit()
 end
 
