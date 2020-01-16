@@ -87,28 +87,33 @@ function flag_squares()
 
   if !(u_input in opened_squares)
     discovered_squares()
-    for i in 1:length(opened_squares)
-      coords_openedsquares = coords(opened_squares[i])
-      inputs[coords_openedsquares[1], coords_openedsquares[2]] = unitedarr[i]
-      arr[coords_openedsquares[1], coords_openedsquares[2]] = inputs[coords_openedsquares[1], coords_openedsquares[2]]
-    end
+    marked_squares()
   pretty_table(grid, noheader = true, hlines = 1:n)
   pretty_table(arr, noheader=true, hlines = 1:n)
   end
 end
 
+function marked_squares()
+    for i in 1:length(opened_squares)
+      coords_openedsquares = coords(opened_squares[i])
+      inputs[coords_openedsquares[1], coords_openedsquares[2]] = unitedarr[i]
+      arr[coords_openedsquares[1], coords_openedsquares[2]] = inputs[coords_openedsquares[1], coords_openedsquares[2]]
+    end
+end
+
 function endgame_mines()
   global inputs_mines = zeros(Int32, n, n)
   global mines_coord = Int32[]
-  global mines_arr = Array{Union{String, Int32}}(undef, n, n)
-  mines_arr .= " "
+#  global mines_arr = Array{Union{String, Int32}}(undef, n, n)
+  arr .= " "
   for i in 1:length(mines)
     mines_coord = coords(mines[i])
     inputs_mines[mines_coord[1], mines_coord[2]] = mines[i]
-    mines_arr[mines_coord[1], mines_coord[2]] = inputs_mines[mines_coord[1], mines_coord[2]]
-#    mines_arr[mines_coord[1], mines_coord[2]] = "*"
+    arr[mines_coord[1], mines_coord[2]] = inputs_mines[mines_coord[1], mines_coord[2]]
+    arr[mines_coord[1], mines_coord[2]] = "*"
   end
-  pretty_table(mines_arr, noheader=true, hlines = 1:n)
+  marked_squares()
+  pretty_table(arr, noheader=true, hlines = 1:n)
 end
 
 function find_mines()
@@ -134,7 +139,7 @@ function find_mines()
 end
 
 function end_game()
-  println("Boom! You died! This is where the mines were hidden: ")
+  println("Boom! You died! This is where the mines (*)  were hidden: ")
   endgame_mines()
 #  if u_input in mines
 #    pretty_table(arr, noheader = true, hlines = 1:n)
