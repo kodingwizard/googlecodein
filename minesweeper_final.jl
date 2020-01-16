@@ -36,20 +36,16 @@ function generate_grid()
   if !(allunique(mines))
     mines = checkuniq(mines)
   end
-  global mines_coord = Int32[]
-  for i in 1:length(mines)
-    mines_coord = coords(mines[i])
-  end
 end
 
 
 function coords(c)
-    if c % 8 == 0
-      y = 8
-      x = c ÷ 8
+    if c % n == 0
+      y = n
+      x = c ÷ n
     else
-      y = c % 8
-      x = (c ÷ 8) + 1
+      y = c % n
+      x = (c ÷ n) + 1
     end
   return x, y
 end
@@ -57,8 +53,13 @@ end
 # This function makes sure that the random numbers generated are all different 
 function checkuniq(mine)
   while !(allunique(mine))
-    mine = rand(1:64, 1, 9)
-    return mine
+    if n == 8
+      mine = rand(1:n*n, 1, 9)
+      return mine
+    elseif n == 16
+      mine = rand(1:n*n, 1, 20)
+      return mine
+    end
   end
 end
 
@@ -96,6 +97,20 @@ function flag_squares()
   end
 end
 
+function endgame_mines()
+  global inputs_mines = zeros(Int32, n, n)
+  global mines_coord = Int32[]
+  global mines_arr = Array{Union{String, Int32}}(undef, n, n)
+  mines_arr .= " "
+  for i in 1:length(mines)
+    mines_coord = coords(mines[i])
+    inputs_mines[mines_coord[1], mines_coord[2]] = mines[i]
+    mines_arr[mines_coord[1], mines_coord[2]] = inputs_mines[mines_coord[1], mines_coord[2]]
+#    mines_arr[mines_coord[1], mines_coord[2]] = "*"
+  end
+  pretty_table(mines_arr, noheader=true, hlines = 1:n)
+end
+
 function find_mines()
 # distance is the distance of the adjacent square from the chosen square with reference to the numbered grid
   distance = [1, 7, 8, 9]
@@ -119,7 +134,8 @@ function find_mines()
 end
 
 function end_game()
-  println("Boom! You died! This is where the mines were hidden: ", mines)
+  println("Boom! You died! This is where the mines were hidden: ")
+  endgame_mines()
 #  if u_input in mines
 #    pretty_table(arr, noheader = true, hlines = 1:n)
 #    game_over = replace(arr, mines => "RIP")
